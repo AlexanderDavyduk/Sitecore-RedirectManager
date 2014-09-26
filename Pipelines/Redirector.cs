@@ -40,7 +40,7 @@ namespace Sitecore.SharedSource.RedirectManager.Pipelines
         {
           Configuration.RedirectsListIsInitialized = true;
           RedirectProcessor.Initialize();
-          RedirectProcessor.CreateListOfRedirects();
+          RedirectProcessor.CreateListOfRedirectsInThread();
         }
       }
       catch (Exception e)
@@ -81,7 +81,11 @@ namespace Sitecore.SharedSource.RedirectManager.Pipelines
       var targetUrl = RedirectProcessor.FindRedirect(baseUrl, out redirectCode, out redirectId);
       if (string.IsNullOrEmpty(targetUrl))
       {
-        LogManager.WriteInfo(string.Format("Redirect for the page: \"{0}\" was not found", Context.Request.FilePath));
+        if (Configuration.EnableNotFounds)
+        {
+          LogManager.WriteInfo(string.Format("Redirect for the page: \"{0}\" was not found", Context.Request.FilePath));
+        }
+
         CyclingProtectionManager.ClearCurrentCycle(args.Context.Response, args.Context.Request);
         return;
       }
@@ -90,12 +94,11 @@ namespace Sitecore.SharedSource.RedirectManager.Pipelines
       sw.Stop();
       LogManager.WriteInfo(
         string.Format(
-          "Page \"{0}\" was redirected to \"{1}\": redirect item id - {2}, elapsed time - {3} milliseconds, {4} ticks",
+          "Page \"{0}\" was redirected to \"{1}\": redirect item id - {2}, elapsed time - {3} milliseconds",
           Context.Request.FilePath,
           targetUrl,
           redirectId,
-          sw.ElapsedMilliseconds,
-          sw.ElapsedTicks));
+          sw.ElapsedMilliseconds));
 
       Response(args, targetUrl, redirectCode);
     }

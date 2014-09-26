@@ -7,11 +7,16 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Sitecore.Data.Events;
+using Sitecore.SharedSource.RedirectManager.Pipelines;
+
 namespace Sitecore.SharedSource.RedirectManager.Editors
 {
   using System;
   using System.Globalization;
   using System.Linq;
+  using System.Web.UI.WebControls;
+
   using Sitecore.Configuration;
   using Sitecore.Globalization;
   using Sitecore.SharedSource.RedirectManager.Utils;
@@ -57,15 +62,19 @@ namespace Sitecore.SharedSource.RedirectManager.Editors
             return;
           }
 
-          var currentDate = DateTime.Now;
-          foreach (var item in from item in children.Where(x => x.IsItemOfType(Templates.Settings.TemplateId))
-                               let settings = new Templates.Settings(item)
-                               where (currentDate - settings.LastUse.DateTime).Days >= Configuration.RemovalDate & (currentDate - settings.InnerItem.Statistics.Created.Date).Days >= Configuration.RemovalDate
-                               select item)
+          using (new EventDisabler())
           {
-            item.Delete();
+            var currentDate = DateTime.Now;
+            foreach (var item in from item in children.Where(x => x.IsItemOfType(Templates.Settings.TemplateId))
+              let settings = new Templates.Settings(item)
+              where (currentDate - settings.LastUse.DateTime).Days >= Configuration.RemovalDate
+              select item)
+            {
+              item.Delete();
+            }
           }
 
+          RedirectProcessor.CreateListOfRedirects();
           var load = string.Concat(new object[]
           {
             "item:load(id=", rootItem.ID, ",language=", rootItem.Language, ",version=", rootItem.Version, ")"

@@ -13,6 +13,6 @@ using System.Reflection;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Sitecore.SharedSource.RedirectManager")]
-[assembly: AssemblyFileVersion("2.1 rev. 121219")]
+[assembly: AssemblyFileVersion("3.0 rev. 140922")]
 [assembly: AssemblyProduct("RedirectManager")]
-[assembly: AssemblyCopyright("Copyright © Sitecore 2012")]
+[assembly: AssemblyCopyright("Copyright © Sitecore 2014")]

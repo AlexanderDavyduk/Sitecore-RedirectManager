@@ -9,13 +9,32 @@
 
 namespace Sitecore.SharedSource.RedirectManager.Utils
 {
-  using Sitecore.Diagnostics;
+  using log4net;
 
   /// <summary>
   /// LogManager class
   /// </summary>
   public class LogManager
   {
+    /// <summary>
+    /// The logger
+    /// </summary>
+    private static ILog logger;
+
+    /// <summary>
+    /// Gets the logger.
+    /// </summary>
+    /// <value>
+    /// The logger.
+    /// </value>
+    public static ILog Logger
+    {
+      get
+      {
+        return logger ?? (logger = log4net.LogManager.GetLogger("Sitecore.Diagnostics.RedirectManager"));
+      }
+    }
+
     /// <summary>
     /// Writes the info message to the log.
     /// </summary>
@@ -24,7 +43,7 @@ namespace Sitecore.SharedSource.RedirectManager.Utils
     {
       if (Configuration.EnableLogging)
       {
-        Log.Info(string.Format("RedirectManager: {0}", message), "RedirectManager");
+        Logger.Info(string.Format("RedirectManager: {0}", message));
       }
     }
 
@@ -36,7 +55,7 @@ namespace Sitecore.SharedSource.RedirectManager.Utils
     {
       if (Configuration.EnableLogging)
       {
-        Log.Error(string.Format("RedirectManager: {0}", message), "RedirectManager");
+        Logger.Error(string.Format("RedirectManager: {0}", message));
       }
     }
   }

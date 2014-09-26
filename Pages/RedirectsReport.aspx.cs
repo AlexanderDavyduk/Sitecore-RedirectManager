@@ -7,6 +7,9 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Linq;
+using Sitecore.Data;
+
 namespace Sitecore.SharedSource.RedirectManager.Pages
 {
   using System;
@@ -48,19 +51,20 @@ namespace Sitecore.SharedSource.RedirectManager.Pages
       }
 
       var targetUrl = "Empty";
-      if (!string.IsNullOrEmpty(item.TargetItem.Url))
+      if (!string.IsNullOrEmpty(item.TargetItem.Url) || item.TargetItem.TargetItem != null)
       {
         targetUrl = item.TargetItem.IsInternal ? UrlNormalizer.GetItemUrl(item.TargetItem.TargetItem) : item.TargetItem.Url;
       }
 
       return string.Format(
-           "<div class=\"block-name\"><div class=\"name\">{0}</div><div class=\"title\">Base Url: {2}, Target Url: {3}</div></div><div class=\"description\">Redirect Code: {4}, Last Use: {5}, ID: {1}</div>",
+           "<div class=\"block-name\"><div class=\"name\">{0}</div><div class=\"title\">Base Url: {2}, Target Url: {3}</div></div><div class=\"description\">Redirect Code: {4}, Multisites: {6}, Last Use: {5}, ID: {1}</div>",
            item.Name,
            item.ID,
-           string.IsNullOrEmpty(item.BaseItem.Value) ? "Empty" : UrlNormalizer.CheckPageExtension(UrlNormalizer.Normalize(item.BaseItem.Value)),
-           targetUrl,
+           string.IsNullOrEmpty(item.BaseItem.Value) ? "Empty" : UrlNormalizer.EncodeUrl(UrlNormalizer.CheckPageExtension(UrlNormalizer.Normalize(item.BaseItem.Value))),
+           UrlNormalizer.EncodeUrl(targetUrl),
            item.RedirectCode != 0 ? item.RedirectCode : Configuration.RedirectStatusCode,
-           item.LastUse.DateTime.ToString("MM/dd/yy") != "01/01/01" ? item.LastUse.DateTime.ToString("MM/dd/yy") : "Never");
+           item.LastUse.DateTime.ToString("MM/dd/yy") != "01/01/01" ? item.LastUse.DateTime.ToString("MM/dd/yy") : "Never",
+           UrlNormalizer.EncodeUrl(RedirectProcessor.ConvertMultisites(item.Multisites)));
     }
 
     /// <summary>
@@ -76,19 +80,20 @@ namespace Sitecore.SharedSource.RedirectManager.Pages
       }
 
       var targetUrl = "Empty";
-      if (!string.IsNullOrEmpty(item.TargetItem.Url))
+      if (!string.IsNullOrEmpty(item.TargetItem.Url) || item.TargetItem.TargetItem != null)
       {
         targetUrl = item.TargetItem.IsInternal ? UrlNormalizer.GetItemUrl(item.TargetItem.TargetItem) : item.TargetItem.Url;
       }
 
       return string.Format(
-         "<div class=\"block-name\"><div class=\"name\">{0}</div><div class=\"title\">Base Section Url: {2}, Target Url: {3}</div></div><div class=\"description\">Redirect Code: {4}, Last Use: {5}, ID: {1}</div>",
+         "<div class=\"block-name\"><div class=\"name\">{0}</div><div class=\"title\">Base Section Url: {2}, Target Url: {3}</div></div><div class=\"description\">Redirect Code: {4}, Multisites: {6}, Last Use: {5}, ID: {1}</div>",
          item.Name,
          item.ID,
-         string.IsNullOrEmpty(item.BaseSection.Value) ? "Empty" : UrlNormalizer.CheckPageExtension(UrlNormalizer.Normalize(item.BaseSection.Value)),
-         targetUrl,
+         string.IsNullOrEmpty(item.BaseSection.Value) ? "Empty" : UrlNormalizer.EncodeUrl(UrlNormalizer.CheckPageExtension(UrlNormalizer.Normalize(item.BaseSection.Value))),
+         UrlNormalizer.EncodeUrl(targetUrl),
          item.RedirectCode != 0 ? item.RedirectCode : Configuration.RedirectStatusCode,
-         item.LastUse.DateTime.ToString("MM/dd/yy") != "01/01/01" ? item.LastUse.DateTime.ToString("MM/dd/yy") : "Never");
+         item.LastUse.DateTime.ToString("MM/dd/yy") != "01/01/01" ? item.LastUse.DateTime.ToString("MM/dd/yy") : "Never",
+         UrlNormalizer.EncodeUrl(RedirectProcessor.ConvertMultisites(item.Multisites)));
     }
 
     /// <summary>
@@ -104,13 +109,14 @@ namespace Sitecore.SharedSource.RedirectManager.Pages
       }
 
       return string.Format(
-         "<div class=\"block-name\"><div class=\"name\">{0}</div><div class=\"title\">Base Section Url: {2}, Target Url: {3}</div></div><div class=\"description\">Redirect Code: {4}, Last Use: {5}, ID: {1}</div>",
+         "<div class=\"block-name\"><div class=\"name\">{0}</div><div class=\"title\">Base Section Url: {2}, Target Url: {3}</div></div><div class=\"description\">Redirect Code: {4}, Multisites: {6}, Last Use: {5}, ID: {1}</div>",
          item.Name,
          item.ID,
-         string.IsNullOrEmpty(item.BaseSection.Value) ? "Empty" : UrlNormalizer.CheckPageExtension(UrlNormalizer.Normalize(item.BaseSection.Value)),
-         item.TargetSection.TargetItem != null ? UrlNormalizer.GetItemUrl(item.TargetSection.TargetItem) : "Empty",
+         string.IsNullOrEmpty(item.BaseSection.Value) ? "Empty" : UrlNormalizer.EncodeUrl(UrlNormalizer.CheckPageExtension(UrlNormalizer.Normalize(item.BaseSection.Value))),
+         item.TargetSection.TargetItem != null ? UrlNormalizer.EncodeUrl(UrlNormalizer.GetItemUrl(item.TargetSection.TargetItem)) : "Empty",
          item.RedirectCode != 0 ? item.RedirectCode : Configuration.RedirectStatusCode,
-         item.LastUse.DateTime.ToString("MM/dd/yy") != "01/01/01" ? item.LastUse.DateTime.ToString("MM/dd/yy") : "Never");
+         item.LastUse.DateTime.ToString("MM/dd/yy") != "01/01/01" ? item.LastUse.DateTime.ToString("MM/dd/yy") : "Never",
+         UrlNormalizer.EncodeUrl(RedirectProcessor.ConvertMultisites(item.Multisites)));
     }
 
     /// <summary>
@@ -185,11 +191,35 @@ namespace Sitecore.SharedSource.RedirectManager.Pages
     }
 
     /// <summary>
+    /// Checks the template.
+    /// </summary>
+    /// <param name="item">The item.</param>
+    /// <returns>true if acceptable template; otherwise - false</returns>
+    private static bool CheckTemplate(Item item)
+    {
+      var templateId = item.TemplateID.ToString();
+      return templateId == ItemToItem.TemplateId || templateId == SectionToItem.TemplateId || templateId == SectionToSection.TemplateId || templateId == RegExRedirect.TemplateId || templateId == "{75A8F163-186F-459E-8AFF-3D161A94A9C7}";
+    }
+
+    /// <summary>
+    /// Checks the template without folder.
+    /// </summary>
+    /// <param name="item">The item.</param>
+    /// <returns></returns>
+    private static bool CheckTemplateWithoutFolder(Item item)
+    {
+      var templateId = item.TemplateID.ToString();
+      return templateId == ItemToItem.TemplateId || templateId == SectionToItem.TemplateId || templateId == SectionToSection.TemplateId || templateId == RegExRedirect.TemplateId;
+    }
+
+    /// <summary>
     /// Generates the report.
     /// </summary>
-    private void GenerateReport()
+    /// <param name="showOld">if set to <c>true</c> [show old].</param>
+    /// <param name="buttonClick">if set to <c>true</c> [button click].</param>
+    private void GenerateReport(bool showOld = false, bool buttonClick = false)
     {
-      if (this.Page.IsPostBack)
+      if (this.Page.IsPostBack && !buttonClick)
       {
         return;
       }
@@ -203,8 +233,17 @@ namespace Sitecore.SharedSource.RedirectManager.Pages
       }
 
       var rootNode = new TreeNode(BuildNodeName(rootItem), rootItem.ID.ToString(), GetIconPath(rootItem));
-      this.AddChildNodes(rootNode, rootItem);
+      if (showOld)
+      {
+        this.AddDescendants(rootNode, rootItem);
+      }
+      else
+      {
+        this.AddChildNodes(rootNode, rootItem);
+      }
+
       this.Redirects.Nodes.Add(rootNode);
+      this.Redirects.ExpandAll();
     }
 
     /// <summary>
@@ -214,12 +253,58 @@ namespace Sitecore.SharedSource.RedirectManager.Pages
     /// <param name="rootItem">The root item.</param>
     private void AddChildNodes(TreeNode rootNode, Item rootItem)
     {
-      foreach (var item in rootItem.Children.ToArray())
+      foreach (var item in rootItem.Children.ToArray().Where(CheckTemplate))
       {
         var node = new TreeNode(BuildNodeName(item), item.ID.ToString(), GetIconPath(item));
         this.AddChildNodes(node, item);
         rootNode.ChildNodes.Add(node);
       }
+    }
+
+    /// <summary>
+    /// Adds the descendants.
+    /// </summary>
+    /// <param name="rootNode">The root node.</param>
+    /// <param name="rootItem">The root item.</param>
+    private void AddDescendants(TreeNode rootNode, Item rootItem)
+    {
+      var children = rootItem.Axes.GetDescendants();
+
+      if (!children.Any())
+      {
+        return;
+      }
+
+      var currentDate = DateTime.Now;
+      foreach (var item in from item in children.Where(x => x.IsItemOfType(Templates.Settings.TemplateId))
+        let settings = new Templates.Settings(item)
+        where
+          (currentDate - settings.LastUse.DateTime).Days >= Configuration.RemovalDate
+        select item)
+      {
+        var node = new TreeNode(BuildNodeName(item), item.ID.ToString(), GetIconPath(item));
+        rootNode.ChildNodes.Add(node);
+      }
+    }
+
+    /// <summary>
+    /// Handles the Click event of the ShowOldRedirects control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    public void ShowOldRedirects_Click(object sender, EventArgs e)
+    {
+      this.GenerateReport(true, true);
+    }
+
+    /// <summary>
+    /// Handles the Click event of the ShowAllRedirects control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    public void ShowAllRedirects_Click(object sender, EventArgs e)
+    {
+      this.GenerateReport(false, true);
     }
   }
 }

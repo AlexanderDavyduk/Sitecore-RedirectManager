@@ -18,7 +18,7 @@ namespace Sitecore.SharedSource.RedirectManager
   /// <summary>
   /// ItemEventHandler class
   /// </summary>
-  public class RedirectItemEventHendler
+  public class RedirectItemEventHandler
   {
     /// <summary>
     /// Called when the item has saved.
@@ -41,7 +41,14 @@ namespace Sitecore.SharedSource.RedirectManager
 
       if (item.ID.ToString() == Items.ItemIDs.RedirectsFolderItem)
       {
-        RedirectProcessor.CreateListOfRedirects();
+        RedirectProcessor.CreateListOfRedirectsInThread();
+      }
+
+      if (item.TemplateID == Multisite.TemplateId)
+      {
+        RedirectProcessor.RebuildMultisites();
+        RedirectProcessor.CreateListOfRedirectsInThread();
+        return;
       }
 
       if (!CheckTemplate(item))
@@ -49,13 +56,22 @@ namespace Sitecore.SharedSource.RedirectManager
         return;
       }
 
-      if (Configuration.RebuildRedirectsList)
+      var changes = Event.ExtractParameter(args, 1) as ItemChanges;
+      if (changes != null)
       {
-        RedirectProcessor.CreateListOfRedirects();
+        if (changes.FieldChanges.Contains(Settings.LastUseFieldId))
+        {
+          return;
+        }
       }
-      else
+
+      //if (Configuration.RebuildRedirectsList)
       {
-        RedirectProcessor.UpdateRedirect(item);
+        RedirectProcessor.CreateListOfRedirectsInThread();
+      }
+      //else
+      {
+        //RedirectProcessor.UpdateRedirectInThread(item);
       }
     }
 
@@ -83,7 +99,14 @@ namespace Sitecore.SharedSource.RedirectManager
 
       if (item.ID.ToString() == Items.ItemIDs.RedirectsFolderItem)
       {
-        RedirectProcessor.CreateListOfRedirects();
+        RedirectProcessor.CreateListOfRedirectsInThread();
+      }
+
+      if (item.TemplateID == Multisite.TemplateId)
+      {
+        RedirectProcessor.RebuildMultisites();
+        RedirectProcessor.CreateListOfRedirectsInThread();
+        return;
       }
 
       if (!CheckTemplate(item))
@@ -91,13 +114,22 @@ namespace Sitecore.SharedSource.RedirectManager
         return;
       }
 
-      if (Configuration.RebuildRedirectsList)
+      var changes = eventArgs.Changes;
+      if (changes != null)
       {
-        RedirectProcessor.CreateListOfRedirects();
+        if (changes.FieldChanges.Contains(Settings.LastUseFieldId))
+        {
+          return;
+        }
       }
-      else
+
+      //if (Configuration.RebuildRedirectsList)
+      //{
+        RedirectProcessor.CreateListOfRedirectsInThread();
+      //}
+      //else
       {
-        RedirectProcessor.UpdateRedirect(item);
+        //RedirectProcessor.UpdateRedirectInThread(item);
       }
     }
 
@@ -120,12 +152,19 @@ namespace Sitecore.SharedSource.RedirectManager
         return;
       }
 
+      if (item.TemplateID == Multisite.TemplateId)
+      {
+        RedirectProcessor.RebuildMultisites();
+        RedirectProcessor.CreateListOfRedirectsInThread();
+        return;
+      }
+
       if (!CheckTemplate(item))
       {
         return;
       }
 
-      RedirectProcessor.RemoveRedirect(item);
+      RedirectProcessor.RemoveRedirectInThread(item);
     }
 
     /// <summary>
@@ -151,12 +190,19 @@ namespace Sitecore.SharedSource.RedirectManager
         return;
       }
 
+      if (item.TemplateID == Multisite.TemplateId)
+      {
+        RedirectProcessor.RebuildMultisites();
+        RedirectProcessor.CreateListOfRedirectsInThread();
+        return;
+      }
+
       if (!CheckTemplate(item))
       {
         return;
       }
 
-      RedirectProcessor.RemoveRedirect(item);
+      RedirectProcessor.RemoveRedirectInThread(item);
     }
 
     /// <summary>

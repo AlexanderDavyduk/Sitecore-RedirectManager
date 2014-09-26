@@ -41,6 +41,22 @@ namespace Sitecore.SharedSource.RedirectManager.Templates
     public string Target { get; set; }
 
     /// <summary>
+    /// Gets or sets the multisites.
+    /// </summary>
+    /// <value>
+    /// The multisites.
+    /// </value>
+    public string Multisites { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether [use on default].
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if [use on default]; otherwise, <c>false</c>.
+    /// </value>
+    public bool UseOnDefault { get; set; }
+
+    /// <summary>
     /// Gets or sets the target query string.
     /// </summary>
     /// <value>

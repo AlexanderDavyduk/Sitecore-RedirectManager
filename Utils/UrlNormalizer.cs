@@ -53,7 +53,13 @@ namespace Sitecore.SharedSource.RedirectManager.Utils
     /// <returns>Virtual folder for the context site</returns>
     public static string GetVirtualVolder()
     {
-        return Context.Site.VirtualFolder != "/" ? Context.Site.VirtualFolder.TrimEnd('/') : string.Empty;
+      if (Context.Site != null)
+      {
+        var folder = DecodeUrl(Context.Site.VirtualFolder.ToLower());
+        return folder != "/" ? folder.TrimEnd('/') : string.Empty;
+      }
+
+      return string.Empty;
     }
 
     /// <summary>
@@ -94,8 +100,8 @@ namespace Sitecore.SharedSource.RedirectManager.Utils
           url = string.Format("/{0}", url);
         }
 
-        url = RemoreStartPathFromUrl(url, currentVirtualFolder);
-        url = RemoreStartPathFromUrl(url, currentStartItem); 
+        url = RemoveStartPathFromUrl(url, currentVirtualFolder);
+        url = RemoveStartPathFromUrl(url, currentStartItem); 
         
         return url;
       }
@@ -190,20 +196,20 @@ namespace Sitecore.SharedSource.RedirectManager.Utils
     /// </summary>
     /// <param name="url">The URL.</param>
     /// <returns>Url with replated "_" and "-"</returns>
-    private static string DecodeUrl(string url)
+    public static string DecodeUrl(string url)
     {
-      return url.Replace("_", " ").Replace("-", " ");
+      return url.Replace("-", " ");
     }
 
     /// <summary>
-    /// Remores the start path from URL.
+    /// Removes the start path from URL.
     /// </summary>
     /// <param name="url">The URL.</param>
     /// <param name="startPath">The start path.</param>
     /// <returns>
     /// The URL without start path.
     /// </returns>
-    private static string RemoreStartPathFromUrl(string url, string startPath)
+    private static string RemoveStartPathFromUrl(string url, string startPath)
     {
       if (!string.IsNullOrEmpty(startPath)
         && url.StartsWith(startPath)

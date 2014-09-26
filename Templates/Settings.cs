@@ -26,6 +26,11 @@ namespace Sitecore.SharedSource.RedirectManager.Templates
     ///  ItemToItemTemplate template ID
     /// </summary>
     public static readonly ID TemplateId = new ID("{0E69AF35-6BF1-412C-8ECF-D9EA60BC3086}");
+
+    /// <summary>
+    /// The last use field identifier
+    /// </summary>
+    public static readonly ID LastUseFieldId = new ID("{64E091E5-91B4-485E-9F60-48607199197C}");
    
     /// <summary>
     /// The redirect code
@@ -36,6 +41,11 @@ namespace Sitecore.SharedSource.RedirectManager.Templates
     /// The date of last use
     /// </summary>
     private DateField lastUse;
+
+    /// <summary>
+    /// The multisites
+    /// </summary>
+    private MultilistField multisites;
 
     // Methods
 
@@ -75,6 +85,20 @@ namespace Sitecore.SharedSource.RedirectManager.Templates
       get
       {
         return this.lastUse ?? (this.lastUse = this.InnerItem.Fields["Last Use"]);
+      }
+    }
+
+    /// <summary>
+    /// Gets the multisite prefix.
+    /// </summary>
+    /// <value>
+    /// The multisite prefix.
+    /// </value>
+    public MultilistField Multisites
+    {
+      get
+      {
+        return this.multisites ?? (this.multisites = this.InnerItem.Fields["Multisites"]);
       }
     }
 

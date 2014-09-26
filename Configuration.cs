@@ -31,6 +31,34 @@ namespace Sitecore.SharedSource.RedirectManager
     }
 
     /// <summary>
+    /// Gets a value indicating whether [enable not founds].
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if [enable not founds]; otherwise, <c>false</c>.
+    /// </value>
+    public static bool EnableNotFounds
+    {
+      get
+      {
+        return Settings.GetBoolSetting("Sitecore.SharedSource.RedirectManager.EnableNotFounds", false);
+      }
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether [enable multisites].
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if [enable multisites]; otherwise, <c>false</c>.
+    /// </value>
+    public static bool EnableMultisites
+    {
+      get
+      {
+        return Settings.GetBoolSetting("Sitecore.SharedSource.RedirectManager.EnableMultisites", false);
+      }
+    }
+
+    /// <summary>
     /// Gets a value indicating whether this <see cref="Configuration"/> is enabled.
     /// </summary>
     /// <value>
@@ -152,20 +180,6 @@ namespace Sitecore.SharedSource.RedirectManager
       get
       {
         return Settings.GetIntSetting("Sitecore.SharedSource.RedirectManager.RecursiveAttempts", 3);
-      }
-    }
-
-    /// <summary>
-    /// Gets a value indicating whether we need to rebuild redirects list after item was updated.
-    /// </summary>
-    /// <value>
-    /// <c>true</c> if need to rebuild; otherwise, <c>false</c>.
-    /// </value>
-    public static bool RebuildRedirectsList
-    {
-      get
-      {
-        return Settings.GetBoolSetting("Sitecore.SharedSource.RedirectManager.RebuildRedirectsList", false);
       }
     }
 

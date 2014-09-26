@@ -45,6 +45,16 @@ namespace Sitecore.SharedSource.RedirectManager.Templates
     /// </summary>
     private DateField lastUse;
 
+    /// <summary>
+    /// The multisites
+    /// </summary>
+    private MultilistField multisites;
+
+    /// <summary>
+    /// The use on default
+    /// </summary>
+    private CheckboxField useOnDefault;
+
     // Methods
 
     /// <summary>
@@ -92,7 +102,21 @@ namespace Sitecore.SharedSource.RedirectManager.Templates
     {
       get
       {
-        return this.redirectCode == 0 ? (this.redirectCode = MainUtil.GetInt(this.InnerItem.Fields["Redirect Code"], Configuration.RedirectStatusCode)) : this.redirectCode;
+        return this.redirectCode == 0 ? (this.redirectCode = MainUtil.GetInt(this.InnerItem.Fields["Redirect Code"].Value, Configuration.RedirectStatusCode)) : this.redirectCode;
+      }
+    }
+
+    /// <summary>
+    /// Gets the multisite prefix.
+    /// </summary>
+    /// <value>
+    /// The multisite prefix.
+    /// </value>
+    public MultilistField Multisites
+    {
+      get
+      {
+        return this.multisites ?? (this.multisites = this.InnerItem.Fields["Multisites"]);
       }
     }
 
@@ -107,6 +131,20 @@ namespace Sitecore.SharedSource.RedirectManager.Templates
       get
       {
         return this.lastUse ?? (this.lastUse = this.InnerItem.Fields["Last Use"]);
+      }
+    }
+
+    /// <summary>
+    /// Gets the use on default.
+    /// </summary>
+    /// <value>
+    /// The use on default.
+    /// </value>
+    public CheckboxField UseOnDefault
+    {
+      get
+      {
+        return this.useOnDefault ?? (this.useOnDefault = this.InnerItem.Fields["Use on default site"]);
       }
     }
   }
