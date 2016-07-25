@@ -43,8 +43,6 @@ namespace Sitecore.SharedSource.RedirectManager.Utils
         startItem = Context.Site.StartItem.ToLower();
         virtualFolder = GetVirtualVolder();
       }
-
-      urlOptions = new UrlOptions { LanguageEmbedding = LanguageEmbedding.Never, AddAspxExtension = true };
     }
 
     /// <summary>
@@ -177,7 +175,7 @@ namespace Sitecore.SharedSource.RedirectManager.Utils
 
       using (new SiteContextSwitcher(SiteContext.GetSite("website")))
       {
-        return LinkManager.GetItemUrl(item, urlOptions).ToLower();
+        return LinkManager.GetItemUrl(item).ToLower();
       }
     }
 
