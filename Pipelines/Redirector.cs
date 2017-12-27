@@ -14,6 +14,7 @@ namespace Sitecore.SharedSource.RedirectManager.Pipelines
   using System.Linq;
   using Sitecore.Diagnostics;
   using Sitecore.Pipelines.HttpRequest;
+  using Sitecore.SharedSource.RedirectManager.Events;
   using Sitecore.SharedSource.RedirectManager.Utils;
 
   /// <summary>
@@ -27,13 +28,13 @@ namespace Sitecore.SharedSource.RedirectManager.Pipelines
     /// <param name="args">The args.</param>
     public override void Process(HttpRequestArgs args)
     {
-      Assert.ArgumentNotNull(args, "RedirectManager");
-
-      if (!Configuration.Enabled)
+      if (IsContentEditor() || !Configuration.Enabled)
       {
         return;
       }
-
+      
+      Assert.ArgumentNotNull(args, "RedirectManager");
+      
       try
       {
         if (!Configuration.RedirectsListIsInitialized)
@@ -90,8 +91,9 @@ namespace Sitecore.SharedSource.RedirectManager.Pipelines
         return;
       }
 
-      RedirectProcessor.UpdateLastUseInThread(redirectId);
       sw.Stop();
+
+      PageRedirectedEventRiser.RaiseEvent(redirectId, DateTime.Now);
       LogManager.WriteInfo(
         string.Format(
           "Page \"{0}\" was redirected to \"{1}\": redirect item id - {2}, elapsed time - {3} milliseconds",
@@ -101,6 +103,26 @@ namespace Sitecore.SharedSource.RedirectManager.Pipelines
           sw.ElapsedMilliseconds));
 
       Response(args, targetUrl, redirectCode);
+    }
+
+    private bool IsContentEditor()
+    {
+      if (Context.Site != null && !string.IsNullOrEmpty(Context.Site.Name))
+      {
+        return
+          Context.Site.Name == "shell" ||
+          Context.Site.Name == "login" ||
+          Context.Site.Name == "admin" ||
+          Context.Site.Name == "service" ||
+          Context.Site.Name == "service" ||
+          Context.Site.Name == "modules_website" ||
+          Context.Site.Name == "scheduler" ||
+          Context.Site.Name == "system" ||
+          Context.Site.Name == "publisher" ||
+          Context.Site.Name == "modules_shell";
+      }
+
+      return false;
     }
 
     /// <summary>
@@ -123,7 +145,7 @@ namespace Sitecore.SharedSource.RedirectManager.Pipelines
     /// <returns>Acceptable page mode - true, otherwise - false</returns>
     private static bool CheckPageMode()
     {
-      return Context.PageMode.IsNormal && !Context.PageMode.IsPageEditor && !Context.PageMode.IsPageEditorEditing
+      return Context.PageMode.IsNormal && !Context.PageMode.IsExperienceEditor && !Context.PageMode.IsExperienceEditorEditing
              && !Context.PageMode.IsPreview;
     }
 

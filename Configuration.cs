@@ -59,6 +59,70 @@ namespace Sitecore.SharedSource.RedirectManager
     }
 
     /// <summary>
+    /// Gets a value indicating whether last use field need to be updated.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if need to be updated; otherwise, <c>false</c>.
+    /// </value>
+    public static bool UpdateLastUse
+    {
+      get
+      {
+        return Settings.GetBoolSetting("Sitecore.SharedSource.RedirectManager.UpdateLastUse", false);
+      }
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether include page extension.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if need to be included; otherwise, <c>false</c>.
+    /// </value>
+    public static bool IncludePageExtention
+    {
+      get
+      {
+        return Settings.GetBoolSetting("Sitecore.SharedSource.RedirectManager.IncludePageExtention", false);
+      }
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether last use field need to be stored in MongoDb.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if need to be stored; otherwise, <c>false</c>.
+    /// </value>
+    public static bool WriteLastUseToMongo
+    {
+      get
+      {
+        return Settings.GetBoolSetting("Sitecore.SharedSource.RedirectManager.WriteLastUseToMongo", false);
+      }
+    }
+
+    /// <summary>
+    /// Gets a value indicating connection string name for MongoDb.
+    /// </summary>
+    public static string MongoConnectionStringName
+    {
+      get
+      {
+        return Settings.GetSetting("Sitecore.SharedSource.RedirectManager.MongoConnectionStringName", "analytics");
+      }
+    }
+
+    /// <summary>
+    /// Gets a value indicating database name where Last Use field need to be updated.
+    /// </summary>
+    public static string LastUseDatabaseName
+    {
+      get
+      {
+        return Settings.GetSetting("Sitecore.SharedSource.RedirectManager.LastUseDatabaseName", "master");
+      }
+    }
+
+    /// <summary>
     /// Gets a value indicating whether this <see cref="Configuration"/> is enabled.
     /// </summary>
     /// <value>
@@ -80,6 +144,17 @@ namespace Sitecore.SharedSource.RedirectManager
       get
       {
         return Settings.GetSetting("Sitecore.SharedSource.RedirectManager.Database", "master");
+      }
+    }
+
+    /// <summary>
+    /// Gets the defauld web site.
+    /// </summary>
+    public static string DefaultSiteName
+    {
+      get
+      {
+        return Settings.GetSetting("Sitecore.SharedSource.RedirectManager.DefaultSiteName", "www");
       }
     }
 

@@ -31,7 +31,7 @@ namespace Sitecore.SharedSource.RedirectManager.Utils
     {
       get
       {
-        return logger ?? (logger = log4net.LogManager.GetLogger("Sitecore.Diagnostics.RedirectManager"));
+        return logger ?? (logger = Diagnostics.LoggerFactory.GetLogger("Sitecore.Diagnostics.RedirectManager"));
       }
     }
 

@@ -31,20 +31,33 @@ namespace Sitecore.SharedSource.RedirectManager.Utils
     /// <summary>
     ///  Url options
     /// </summary>
-    private static UrlOptions urlOptions;
+    private static UrlOptions _urlOptions;
+
+    private static UrlOptions UrlOptions
+    {
+      get
+      {
+        if (_urlOptions == null)
+        {
+          _urlOptions = new UrlOptions { LanguageEmbedding = LanguageEmbedding.Never, AddAspxExtension = true };
+        }
+
+        return _urlOptions;
+      }
+    }
+
+  
 
     /// <summary>
     /// Initializes this instance.
     /// </summary>
     public static void Initialize()
     {
-      using (new SiteContextSwitcher(SiteContext.GetSite("website")))
+      using (new SiteContextSwitcher(SiteContext.GetSite(Configuration.DefaultSiteName)))
       {
         startItem = Context.Site.StartItem.ToLower();
         virtualFolder = GetVirtualVolder();
       }
-
-      urlOptions = new UrlOptions { LanguageEmbedding = LanguageEmbedding.Never, AddAspxExtension = true };
     }
 
     /// <summary>
@@ -141,9 +154,17 @@ namespace Sitecore.SharedSource.RedirectManager.Utils
     /// <returns>Checked url</returns>
     public static string CheckPageExtension(string url)
     {
-      if (!string.IsNullOrEmpty(url) && !url.EndsWith(".aspx"))
+      if (!string.IsNullOrEmpty(url))
       {
-        url = string.Format("{0}.aspx", url);
+        if (url.EndsWith(".aspx") && !Configuration.IncludePageExtention)
+        {
+          url = RemovePageExtension(url);
+        }
+
+        if (!url.EndsWith(".aspx") && Configuration.IncludePageExtention)
+        {
+          url = string.Format("{0}.aspx", url);
+        }
       }
 
       return url;
@@ -175,9 +196,9 @@ namespace Sitecore.SharedSource.RedirectManager.Utils
         return string.Empty;
       }
 
-      using (new SiteContextSwitcher(SiteContext.GetSite("website")))
+      using (new SiteContextSwitcher(SiteContext.GetSite(Configuration.DefaultSiteName)))
       {
-        return LinkManager.GetItemUrl(item, urlOptions).ToLower();
+        return LinkManager.GetItemUrl(item, UrlOptions).ToLower();
       }
     }
 

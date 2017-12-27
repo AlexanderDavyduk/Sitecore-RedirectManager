@@ -11,6 +11,7 @@ namespace Sitecore.SharedSource.RedirectManager.Templates
 {
   using System;
   using Sitecore.Data;
+  using Sitecore.Data.Events;
   using Sitecore.Data.Fields;
   using Sitecore.Data.Items;
   using Sitecore.SecurityModel;
@@ -31,7 +32,7 @@ namespace Sitecore.SharedSource.RedirectManager.Templates
     /// The last use field identifier
     /// </summary>
     public static readonly ID LastUseFieldId = new ID("{64E091E5-91B4-485E-9F60-48607199197C}");
-   
+
     /// <summary>
     /// The redirect code
     /// </summary>
@@ -59,7 +60,7 @@ namespace Sitecore.SharedSource.RedirectManager.Templates
     }
 
     // Properties
-    
+
     /// <summary>
     /// Gets the redirect code.
     /// </summary>
@@ -105,19 +106,17 @@ namespace Sitecore.SharedSource.RedirectManager.Templates
     /// <summary>
     /// Updates the last use.
     /// </summary>
-    public void UpdateLastUseWithCurrentDate()
+    public void UpdateLastUse(DateTime dateTime)
     {
-      if (this.LastUse != null && this.LastUse.DateTime.Date == DateTime.Now.Date)
-      {
-        return;
-      }
-
       using (new SecurityDisabler())
       {
-        this.BeginEdit();
-        this["Last Use"] = DateUtil.IsoNowDate;
-        this.lastUse = this.InnerItem.Fields["Last Use"];
-        this.EndEdit();
+        using (new EventDisabler())
+        {
+          this.BeginEdit();
+          this[LastUseFieldId] = DateUtil.ToIsoDate(dateTime);
+          this.lastUse = this.InnerItem.Fields[LastUseFieldId];
+          this.EndEdit();
+        }
       }
     }
   }

@@ -7,14 +7,9 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-using Sitecore.Diagnostics;
-using Sitecore.Rules.Conditions;
-using Sitecore.Shell.Applications.ContentEditor;
-using Sitecore.StringExtensions;
-using Sitecore.Web.UI.XamlSharp.Xaml.Extensions;
-
 namespace Sitecore.SharedSource.RedirectManager
 {
+  using System;
   using System.Collections;
   using System.Collections.Generic;
   using System.Diagnostics;
@@ -29,8 +24,11 @@ namespace Sitecore.SharedSource.RedirectManager
   using Data.Fields;
   using Data.Items;
   using Items;
+  using Sitecore.SharedSource.RedirectManager.Events;
+  using Sitecore.SharedSource.RedirectManager.Repository;
   using Templates;
   using Utils;
+  using Sitecore.StringExtensions;
   using LayoutField = Data.Fields.LayoutField;
 
   /// <summary>
@@ -55,6 +53,8 @@ namespace Sitecore.SharedSource.RedirectManager
 
     private const string IndexesPath = "~/temp/";
 
+    private static RedirectsRepository redirectsRepository;
+
     /// <summary>
     ///  local variable for synchronization
     /// </summary>
@@ -63,7 +63,7 @@ namespace Sitecore.SharedSource.RedirectManager
     /// <summary>
     /// The multisites
     /// </summary>
-    private static Dictionary<ID, string> multisites; 
+    private static Dictionary<ID, string> multisites;
 
     /// <summary>
     /// Initializes this instance.
@@ -71,6 +71,7 @@ namespace Sitecore.SharedSource.RedirectManager
     public static void Initialize()
     {
       UrlNormalizer.Initialize();
+      redirectsRepository = new RedirectsRepository();
     }
 
     /// <summary>
@@ -122,11 +123,14 @@ namespace Sitecore.SharedSource.RedirectManager
     /// <summary>
     /// Updates the last use in thread.
     /// </summary>
-    /// <param name="id">The id.</param>
-    public static void UpdateLastUseInThread(string id)
+    /// <param name="redirect">The id.</param>
+    public static void UpdateLastUseInThread(PageRedirectedEventArgs redirect)
     {
-      var newThread = new Thread(UpdateLastUse);
-      newThread.Start(id);
+      if (Configuration.UpdateLastUse)
+      {
+        var newThread = new Thread(UpdateLastUse);
+        newThread.Start(redirect);
+      }
     }
 
     /// <summary>
@@ -155,12 +159,6 @@ namespace Sitecore.SharedSource.RedirectManager
       var targetRedirect = FindItemToItemRedirect(url);
       if (targetRedirect != null)
       {
-        /*if (!CheckVirtualFolder(targetRedirect.Multisites, targetRedirect.UseOnDefault))
-        {
-          LogManager.WriteInfo("Redirect {0} is found, but multisite {1} is not alloved".FormatWith(targetRedirect.ItemId, UrlNormalizer.EncodeUrl(UrlNormalizer.GetVirtualVolder())));
-          return string.Empty;
-        }*/
-
         redirectId = targetRedirect.ItemId.ToString();
         redirectCode = targetRedirect.RedirectCode;
         return PrepareRedirectUrl(targetRedirect);
@@ -169,12 +167,6 @@ namespace Sitecore.SharedSource.RedirectManager
       targetRedirect = FindSectionToItemRedirect(url);
       if (targetRedirect != null)
       {
-        /*if (!CheckVirtualFolder(targetRedirect.Multisites, targetRedirect.UseOnDefault))
-        {
-          LogManager.WriteInfo("Redirect {0} is found, but multisite {1} is not alloved".FormatWith(targetRedirect.ItemId, UrlNormalizer.EncodeUrl(UrlNormalizer.GetVirtualVolder())));
-          return string.Empty;
-        }*/
-
         redirectId = targetRedirect.ItemId.ToString();
         redirectCode = targetRedirect.RedirectCode;
         return PrepareRedirectUrl(targetRedirect);
@@ -240,21 +232,32 @@ namespace Sitecore.SharedSource.RedirectManager
       {
         var sw = new Stopwatch();
         sw.Start();
-        var itemsList = GetRedirects(ItemsCacheKey);
-        var sectionsList = GetRedirects(SectionsCacheKey);
-        var regExList = GetRegExRedirects(RegExCacheKey);
 
-        CheckItemTypeAndRemove(itemToRemove, itemsList, sectionsList, regExList, out itemsList, out sectionsList, out regExList);
+        try
+        {
+          var itemsList = GetRedirects(ItemsCacheKey);
+          var sectionsList = GetRedirects(SectionsCacheKey);
+          var regExList = GetRegExRedirects(RegExCacheKey);
 
-        SaveRedirects(ItemsCacheKey, itemsList);
-        SaveRedirects(SectionsCacheKey, sectionsList);
-        SaveRedirects(RegExCacheKey, regExList);
-        sw.Stop();
-        LogManager.WriteInfo(
-          string.Format(
-            "Redirect for the {0} item was removed: elapsed time - {1} milliseconds",
-            itemToRemove.ID,
-            sw.ElapsedMilliseconds));
+          CheckItemTypeAndRemove(itemToRemove, itemsList, sectionsList, regExList, out itemsList, out sectionsList, out regExList);
+
+          SaveRedirects(ItemsCacheKey, itemsList);
+          SaveRedirects(SectionsCacheKey, sectionsList);
+          SaveRedirects(RegExCacheKey, regExList);
+        }
+        catch (Exception ex)
+        {
+          LogManager.WriteError($"{ex.Message} {ex.StackTrace}");
+        }
+        finally
+        {
+          sw.Stop();
+          LogManager.WriteInfo(
+            string.Format(
+              "Redirect for the {0} item was removed: elapsed time - {1} milliseconds",
+              itemToRemove.ID,
+              sw.ElapsedMilliseconds));
+        }
       }
     }
 
@@ -276,50 +279,60 @@ namespace Sitecore.SharedSource.RedirectManager
       {
         var sw = new Stopwatch();
         sw.Start();
-        var redirectForlder = Factory.GetDatabase(Configuration.Database).GetItem(ItemIDs.RedirectsFolderItem);
-        if (redirectForlder == null)
-        {
-          LogManager.WriteError(string.Format("Forlder with redirects \"{0}\" not found", ItemIDs.RedirectsFolderItem));
-          return;
-        }
 
         var itemsRedirectsList = new List<RedirectItem>();
         var sectionsRedirectList = new List<RedirectItem>();
         var regExRedirectList = new List<RegExItem>();
 
-        if (readFromIndex)
+        try
         {
-          itemsRedirectsList = GetRedirectsFromIndexFile(ItemsCacheKey);
-          sectionsRedirectList = GetRedirectsFromIndexFile(SectionsCacheKey);
-          regExRedirectList = GetRegExRedirectsFromIndexFile(RegExCacheKey);
-        }
+          var redirectForlder = Factory.GetDatabase(Configuration.Database).GetItem(ItemIDs.RedirectsFolderItem);
+          if (redirectForlder == null)
+          {
+            LogManager.WriteError(string.Format("Forlder with redirects \"{0}\" not found", ItemIDs.RedirectsFolderItem));
+            return;
+          }
 
-        if (itemsRedirectsList.Count == 0 && sectionsRedirectList.Count == 0 && regExRedirectList.Count == 0)
+          if (readFromIndex)
+          {
+            itemsRedirectsList = GetRedirectsFromIndexFile(ItemsCacheKey);
+            sectionsRedirectList = GetRedirectsFromIndexFile(SectionsCacheKey);
+            regExRedirectList = GetRegExRedirectsFromIndexFile(RegExCacheKey);
+          }
+
+          if (itemsRedirectsList.Count == 0 && sectionsRedirectList.Count == 0 && regExRedirectList.Count == 0)
+          {
+            ProcessChildren(
+              redirectForlder,
+              itemsRedirectsList,
+              sectionsRedirectList,
+              regExRedirectList,
+              out itemsRedirectsList,
+              out sectionsRedirectList,
+              out regExRedirectList);
+
+            SaveRedirects(ItemsCacheKey, itemsRedirectsList);
+            SaveRedirects(SectionsCacheKey, sectionsRedirectList);
+            SaveRedirects(RegExCacheKey, regExRedirectList);
+          }
+
+          SaveRedirects(ItemsCacheKey, itemsRedirectsList, !readFromIndex);
+          SaveRedirects(SectionsCacheKey, sectionsRedirectList, !readFromIndex);
+          SaveRedirects(RegExCacheKey, regExRedirectList, !readFromIndex);
+        }
+        catch (Exception ex)
         {
-          ProcessChildren(
-            redirectForlder, 
-            itemsRedirectsList, 
-            sectionsRedirectList, 
-            regExRedirectList,
-            out itemsRedirectsList,
-            out sectionsRedirectList, 
-            out regExRedirectList);
-
-          SaveRedirects(ItemsCacheKey, itemsRedirectsList);
-          SaveRedirects(SectionsCacheKey, sectionsRedirectList);
-          SaveRedirects(RegExCacheKey, regExRedirectList);
+          LogManager.WriteError($"{ex.Message} {ex.StackTrace}");
         }
-
-        SaveRedirects(ItemsCacheKey, itemsRedirectsList, !readFromIndex);
-        SaveRedirects(SectionsCacheKey, sectionsRedirectList, !readFromIndex);
-        SaveRedirects(RegExCacheKey, regExRedirectList, !readFromIndex);
-
-        sw.Stop();
-        LogManager.WriteInfo(
-          string.Format(
-            "Lists with redirects were created: total number of redirects - {0}, elapsed time - {1}",
-            itemsRedirectsList.Count + sectionsRedirectList.Count + regExRedirectList.Count,
-            sw.Elapsed));
+        finally
+        {
+          sw.Stop();
+          LogManager.WriteInfo(
+            string.Format(
+              "Lists with redirects were created: total number of redirects - {0}, elapsed time - {1}",
+              itemsRedirectsList.Count + sectionsRedirectList.Count + regExRedirectList.Count,
+              sw.Elapsed));
+        }
       }
     }
 
@@ -404,19 +417,37 @@ namespace Sitecore.SharedSource.RedirectManager
     /// <summary>
     /// Updates the last use.
     /// </summary>
-    /// <param name="id">The id.</param>
-    private static void UpdateLastUse(object id)
+    /// <param name="redirect">The id.</param>
+    private static void UpdateLastUse(object redirect)
     {
-      var itemId = id.ToString();
-
-      var item = Factory.GetDatabase(Configuration.Database).GetItem(itemId);
-      if (item == null || !item.IsItemOfType(Templates.Settings.TemplateId))
+      try
       {
-        return;
-      }
+        var redirectArgs = (PageRedirectedEventArgs)redirect;
 
-      var settingItem = new Templates.Settings(item);
-      settingItem.UpdateLastUseWithCurrentDate();
+        var itemId = new ID(redirectArgs.RedirectId);
+        var item = Factory.GetDatabase(Configuration.LastUseDatabaseName).GetItem(itemId);
+        if (item == null || !item.IsItemOfType(Templates.Settings.TemplateId))
+        {
+          return;
+        }
+
+        if (Configuration.WriteLastUseToMongo)
+        {
+          redirectsRepository.UpdateRedirect(itemId.Guid, redirectArgs.RedirectTime);
+        }
+        else
+        {
+          var settingItem = new Templates.Settings(item);
+          if (settingItem.LastUse.DateTime.Date < redirectArgs.RedirectTime.Date)
+          {
+            settingItem.UpdateLastUse(DateTime.Now);
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        LogManager.WriteError($"{ex.Message} {ex.StackTrace}");
+      }
     }
 
     /// <summary>
@@ -432,8 +463,8 @@ namespace Sitecore.SharedSource.RedirectManager
       }
 
       var sites = (from site in multisitesCollection.GetItems()
-                   where Multisites.ContainsKey(site.ID)
-                   select Multisites[site.ID]).Aggregate(string.Empty, (current, prefix) => string.Format("{0}|{1}", current, prefix));
+        where Multisites.ContainsKey(site.ID)
+        select Multisites[site.ID]).Aggregate(string.Empty, (current, prefix) => string.Format("{0}|{1}", current, prefix));
 
       return UrlNormalizer.DecodeUrl(sites.TrimStart('|').ToLower());
     }
@@ -454,7 +485,7 @@ namespace Sitecore.SharedSource.RedirectManager
         return true;
       }
 
-      if (Context.Site != null && Context.Site.Name == "website")
+      if (Context.Site != null && Context.Site.Name == Configuration.DefaultSiteName)
       {
         return useOnDefault;
       }
@@ -773,8 +804,9 @@ namespace Sitecore.SharedSource.RedirectManager
       }
 
       var itemToItem = new ItemToItem(item);
-      if ((string.IsNullOrEmpty(itemToItem.TargetItem.Url) && itemToItem.TargetItem.TargetItem == null)
-        || string.IsNullOrEmpty(itemToItem.BaseItem.Value))
+      if (itemToItem.TargetItem == null
+          || (itemToItem.TargetItem.TargetItem == null && string.IsNullOrEmpty(itemToItem.TargetItem.Url))
+          || string.IsNullOrEmpty(itemToItem.BaseItem.Value))
       {
         return null;
       }
@@ -788,7 +820,7 @@ namespace Sitecore.SharedSource.RedirectManager
           return null;
         }
 
-        targetUrl = UrlNormalizer.GetItemUrl(itemToItem.TargetItem.TargetItem);
+        targetUrl = UrlNormalizer.CheckPageExtension(UrlNormalizer.GetItemUrl(itemToItem.TargetItem.TargetItem));
         external = false;
       }
 
@@ -821,7 +853,8 @@ namespace Sitecore.SharedSource.RedirectManager
 
       var sectionToItem = new SectionToItem(item);
       if (string.IsNullOrEmpty(sectionToItem.BaseSection.Value)
-        || (string.IsNullOrEmpty(sectionToItem.TargetItem.Url) && sectionToItem.TargetItem.TargetItem == null))
+          || sectionToItem.TargetItem == null
+          || (sectionToItem.TargetItem.TargetItem == null && string.IsNullOrEmpty(sectionToItem.TargetItem.Url)))
       {
         return null;
       }
@@ -835,7 +868,7 @@ namespace Sitecore.SharedSource.RedirectManager
           return null;
         }
 
-        targetUrl = UrlNormalizer.GetItemUrl(sectionToItem.TargetItem.TargetItem);
+        targetUrl = UrlNormalizer.CheckPageExtension(UrlNormalizer.GetItemUrl(sectionToItem.TargetItem.TargetItem));
         external = false;
       }
 
@@ -880,7 +913,7 @@ namespace Sitecore.SharedSource.RedirectManager
       var redirectItem = new RedirectItem
       {
         ItemId = sectionToSection.ID,
-        Target = UrlNormalizer.GetItemUrl(sectionToSection.TargetSection.TargetItem),
+        Target = UrlNormalizer.CheckPageExtension(UrlNormalizer.GetItemUrl(sectionToSection.TargetSection.TargetItem)),
         Base = UrlNormalizer.Normalize(sectionToSection.BaseSection.Value),
         RedirectCode = sectionToSection.RedirectCode,
         Multisites = ConvertMultisites(sectionToSection.Multisites),
@@ -1066,7 +1099,7 @@ namespace Sitecore.SharedSource.RedirectManager
         var sectionRedirectItem = new RedirectItem
         {
           ItemId = itemId,
-          Target = targetSectionUrl,
+          Target = UrlNormalizer.CheckPageExtension(targetSectionUrl),
           Base = UrlNormalizer.CheckPageExtension(baseSectionUrl),
           RedirectCode = redirectCode,
           Multisites = multisites,
@@ -1083,37 +1116,37 @@ namespace Sitecore.SharedSource.RedirectManager
       {
         list.AddRange(
           from item in sectionItem.Axes.GetDescendants().Where(CheckPresentation)
-          select UrlNormalizer.GetItemUrl(item)
-            into targetUrl
-            let baseUrl = string.Format("{0}{1}", baseSectionUrl, targetUrl)
-            select new RedirectItem
-            {
-              ItemId = itemId,
-              Target = targetUrl,
-              Base = baseUrl,
-              External = false,
-              RedirectCode = redirectCode,
-              Multisites = multisites,
-              UseOnDefault = useOnDefaultSite
-            });
+          select UrlNormalizer.CheckPageExtension(UrlNormalizer.GetItemUrl(item))
+          into targetUrl
+          let baseUrl = string.Format("{0}{1}", baseSectionUrl, targetUrl)
+          select new RedirectItem
+          {
+            ItemId = itemId,
+            Target = targetUrl,
+            Base = baseUrl,
+            External = false,
+            RedirectCode = redirectCode,
+            Multisites = multisites,
+            UseOnDefault = useOnDefaultSite
+          });
       }
       else
       {
         list.AddRange(
-         from item in sectionItem.Axes.GetDescendants().Where(CheckPresentation)
-         select UrlNormalizer.GetItemUrl(item)
-           into targetUrl
-           let baseUrl = targetUrl.Replace(targetSectionUrl, baseSectionUrl)
-           select new RedirectItem
-           {
-             ItemId = itemId,
-             Target = targetUrl,
-             Base = baseUrl,
-             External = false,
-             RedirectCode = redirectCode,
-             Multisites = multisites,
-             UseOnDefault = useOnDefaultSite
-           });
+          from item in sectionItem.Axes.GetDescendants().Where(CheckPresentation)
+          select UrlNormalizer.CheckPageExtension(UrlNormalizer.GetItemUrl(item))
+          into targetUrl
+          let baseUrl = targetUrl.Replace(targetSectionUrl, baseSectionUrl)
+          select new RedirectItem
+          {
+            ItemId = itemId,
+            Target = targetUrl,
+            Base = baseUrl,
+            External = false,
+            RedirectCode = redirectCode,
+            Multisites = multisites,
+            UseOnDefault = useOnDefaultSite
+          });
       }
 
       return list;
@@ -1180,8 +1213,8 @@ namespace Sitecore.SharedSource.RedirectManager
 
         var body = File.ReadAllText(filePath);
         return !string.IsNullOrEmpty(body)
-                 ? JsonConvert.DeserializeObject<List<RedirectItem>>(body)
-                 : new List<RedirectItem>();
+          ? JsonConvert.DeserializeObject<List<RedirectItem>>(body)
+          : new List<RedirectItem>();
       }
     }
 

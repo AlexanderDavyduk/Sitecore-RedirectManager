@@ -61,7 +61,7 @@ namespace Sitecore.SharedSource.RedirectManager.Pages
            item.Name,
            item.ID,
            string.IsNullOrEmpty(item.BaseItem.Value) ? "Empty" : UrlNormalizer.EncodeUrl(UrlNormalizer.CheckPageExtension(UrlNormalizer.Normalize(item.BaseItem.Value))),
-           UrlNormalizer.EncodeUrl(targetUrl),
+           UrlNormalizer.CheckPageExtension(UrlNormalizer.EncodeUrl(targetUrl)),
            item.RedirectCode != 0 ? item.RedirectCode : Configuration.RedirectStatusCode,
            item.LastUse.DateTime.ToString("MM/dd/yy") != "01/01/01" ? item.LastUse.DateTime.ToString("MM/dd/yy") : "Never",
            UrlNormalizer.EncodeUrl(RedirectProcessor.ConvertMultisites(item.Multisites)));
@@ -82,7 +82,7 @@ namespace Sitecore.SharedSource.RedirectManager.Pages
       var targetUrl = "Empty";
       if (!string.IsNullOrEmpty(item.TargetItem.Url) || item.TargetItem.TargetItem != null)
       {
-        targetUrl = item.TargetItem.IsInternal ? UrlNormalizer.GetItemUrl(item.TargetItem.TargetItem) : item.TargetItem.Url;
+        targetUrl = item.TargetItem.IsInternal ? UrlNormalizer.CheckPageExtension(UrlNormalizer.GetItemUrl(item.TargetItem.TargetItem)) : UrlNormalizer.CheckPageExtension(item.TargetItem.Url);
       }
 
       return string.Format(
@@ -113,7 +113,7 @@ namespace Sitecore.SharedSource.RedirectManager.Pages
          item.Name,
          item.ID,
          string.IsNullOrEmpty(item.BaseSection.Value) ? "Empty" : UrlNormalizer.EncodeUrl(UrlNormalizer.CheckPageExtension(UrlNormalizer.Normalize(item.BaseSection.Value))),
-         item.TargetSection.TargetItem != null ? UrlNormalizer.EncodeUrl(UrlNormalizer.GetItemUrl(item.TargetSection.TargetItem)) : "Empty",
+         item.TargetSection.TargetItem != null ? UrlNormalizer.CheckPageExtension(UrlNormalizer.EncodeUrl(UrlNormalizer.GetItemUrl(item.TargetSection.TargetItem))) : "Empty",
          item.RedirectCode != 0 ? item.RedirectCode : Configuration.RedirectStatusCode,
          item.LastUse.DateTime.ToString("MM/dd/yy") != "01/01/01" ? item.LastUse.DateTime.ToString("MM/dd/yy") : "Never",
          UrlNormalizer.EncodeUrl(RedirectProcessor.ConvertMultisites(item.Multisites)));
@@ -225,7 +225,7 @@ namespace Sitecore.SharedSource.RedirectManager.Pages
       }
 
       this.Redirects.Nodes.Clear();
-      var rootItem = Factory.GetDatabase(Configuration.Database).GetItem(RedirectManager.Items.ItemIDs.RedirectsFolderItem);
+      var rootItem = Factory.GetDatabase(Configuration.LastUseDatabaseName).GetItem(RedirectManager.Items.ItemIDs.RedirectsFolderItem);
 
       if (rootItem == null)
       {

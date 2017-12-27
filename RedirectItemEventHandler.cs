@@ -34,6 +34,7 @@ namespace Sitecore.SharedSource.RedirectManager
 
       var item = Event.ExtractParameter(args, 0) as Item;
       Assert.IsNotNull(item, "No item in parameters");
+
       if (item.Database.Name != Configuration.Database)
       {
         return;
@@ -55,24 +56,8 @@ namespace Sitecore.SharedSource.RedirectManager
       {
         return;
       }
-
-      var changes = Event.ExtractParameter(args, 1) as ItemChanges;
-      if (changes != null)
-      {
-        if (changes.FieldChanges.Contains(Settings.LastUseFieldId))
-        {
-          return;
-        }
-      }
-
-      //if (Configuration.RebuildRedirectsList)
-      {
-        RedirectProcessor.CreateListOfRedirectsInThread();
-      }
-      //else
-      {
-        //RedirectProcessor.UpdateRedirectInThread(item);
-      }
+      
+      RedirectProcessor.CreateListOfRedirectsInThread();
     }
 
     /// <summary>
@@ -123,14 +108,7 @@ namespace Sitecore.SharedSource.RedirectManager
         }
       }
 
-      //if (Configuration.RebuildRedirectsList)
-      //{
-        RedirectProcessor.CreateListOfRedirectsInThread();
-      //}
-      //else
-      {
-        //RedirectProcessor.UpdateRedirectInThread(item);
-      }
+      RedirectProcessor.CreateListOfRedirectsInThread();
     }
 
     /// <summary>

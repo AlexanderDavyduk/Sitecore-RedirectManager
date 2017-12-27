@@ -3,7 +3,7 @@
     <metadata>
       <PackageName>RedirectManager</PackageName>
       <Author>Alexander Davyduk</Author>
-      <Version>3.0 rev. 140922</Version>
+      <Version>3.1 rev. 171222</Version>
       <Revision />
       <License />
       <Comment />
@@ -25,7 +25,11 @@ use.</Readme>
   <Sources>
     <xfiles>
       <Entries>
-        <x-item>/App_Config/Include/Sitecore.SharedSource.RedirectManager.config</x-item>
+        <x-item>/App_Config/Include/RedirectManager/</x-item>
+        <x-item>/App_Config/Include/RedirectManager/Sitecore.SharedSource..RedirectManager.CM.config.disabled</x-item>
+        <x-item>/App_Config/Include/RedirectManager/Sitecore.SharedSource..RedirectManager.config</x-item>
+        <x-item>/App_Config/Include/RedirectManager/Sitecore.SharedSource..RedirectManager.SingleSite.config</x-item>
+        <x-item>/App_Config/Include/RedirectManager/Sitecore.SharedSource.RedirectManager.CD.config.disabled</x-item>
       </Entries>
       <Converter>
         <FileToEntryConverter>
@@ -49,6 +53,8 @@ use.</Readme>
     <xfiles>
       <Entries>
         <x-item>/bin/Sitecore.SharedSource.RedirectManager.dll</x-item>
+        <x-item>/bin/MongoDB.Bson.dll</x-item>
+        <x-item>/bin/MongoDB.Driver.dll</x-item>
       </Entries>
       <Converter>
         <FileToEntryConverter>
@@ -69,114 +75,6 @@ use.</Readme>
       <Exclude />
       <Name>dll</Name>
     </xfiles>
-    <xitems>
-      <Entries>
-        <x-item>/core/sitecore/content/Applications/Content Editor/Editors/Redirect Manager/{21771CDB-D9EE-40C6-9BE7-A5C616922F0D}/invariant/0</x-item>
-        <x-item>/core/sitecore/content/Applications/Content Editor/Editors/Redirect Manager/Redirects Report/{2DAB94F3-113F-434C-AAD8-1373034ABAF2}/invariant/0</x-item>
-        <x-item>/master/sitecore/system/Modules/Redirect Manager/{05DAD3A3-7484-411E-9233-D9F052219632}/invariant/0</x-item>
-        <x-item>/master/sitecore/system/Settings/Validation Rules/Field Rules/Url Validation/{53BF4EC8-5AE8-4794-874C-429966B41008}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/{40A7B88A-4C93-44A0-B29B-4080808CBD8C}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Item to Item/{BCFFD681-EC1A-4EDB-A0CE-EB005F900A77}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Item to Item/Data/{1A8A813F-A2F8-466C-9C42-EC1CA44D3E87}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Item to Item/Data/Base Item/{19293C70-F330-454E-8BD8-3CC8C7D35C34}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Item to Item/Data/Target Item/{F8D4BF0C-26ED-49EF-AACE-30B4795BF528}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_RegEx Redirect/{10B4487B-B89A-4F4D-8E8D-2F37E95E4830}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_RegEx Redirect/Data/{BFAB35CD-9E99-49E3-9424-F2FE9E1A9C0A}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_RegEx Redirect/Data/Expression/{FEB12E97-F138-46E9-B74F-C676A286AF2C}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_RegEx Redirect/Data/Value/{C526077B-1253-4E82-8F7F-4752CEC3A6E1}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Item/{8BFC5D64-D15C-45C4-B5A0-A42FFC525F26}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Item/Data/{959B0092-424E-44E4-A5A3-2CB34217974E}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Item/Data/Base Section/{85196B35-3F71-43AE-8498-7865C4D3B64B}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Item/Data/Target Item/{A48DFBAC-90D3-41C5-A691-CF779EAC4744}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Section/{9FDF5133-01CA-4807-98D7-B428CB847947}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Section/Data/{4679DA46-BA7F-4DA7-9C0E-B4C046264DFF}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Section/Data/Base Section/{690EE95D-743F-491E-8B61-6974B5B3C8C2}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Section/Data/Target Section/{C8AA69E0-75BE-4440-83F1-79C961C80AC6}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Settings/{0E69AF35-6BF1-412C-8ECF-D9EA60BC3086}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Settings/Settings/{41EE1039-BD94-4934-A330-09AD98F269DB}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Settings/Settings/Last Use/{64E091E5-91B4-485E-9F60-48607199197C}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Settings/Settings/Redirect Code/{ACC539CE-79C8-45FD-AB52-5BDF3257C571}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/{1558CE91-0FF7-4A7B-BF07-5E020A77BD22}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Folder/__Standard Values/{F39E43B6-67E0-4234-A410-3D3F5391E4E0}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Folder/{75A8F163-186F-459E-8AFF-3D161A94A9C7}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Item to Item/__Standard Values/{E78D87EE-ABA6-4C29-897F-701794D56B8F}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Item to Item/{D0BFFA7B-CA51-400D-9037-809DECFB14D3}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/RegEx Redirect/__Standard Values/{2D886EFA-0936-49D9-BC56-8AFF96658EF4}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/RegEx Redirect/{F91102D6-C17E-4966-9A1A-F551FDD18D40}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Section to Item/__Standard Values/{6880B208-B510-4FBA-9962-DB627440CC79}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Section to Item/{A7C5E6AB-48FF-4846-9A2C-255F8387F18E}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Section to Section/__Standard Values/{3DB5E821-6B67-482A-B96E-355DFACF05D8}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Section to Section/{77A922AE-C49E-468D-BA7E-91746A34E7E0}/invariant/0</x-item>
-        <x-item>/core/sitecore/content/Applications/Content Editor/Ribbons/Chunks/Redirects/{85D21D1E-D4B2-48A5-AC1D-39AF836468B2}/invariant/0</x-item>
-        <x-item>/core/sitecore/content/Applications/Content Editor/Ribbons/Chunks/Redirects/Remove Old/{8D04EBCE-1C62-42FD-8AC1-563FA3E7113C}/invariant/0</x-item>
-        <x-item>/core/sitecore/content/Applications/Content Editor/Ribbons/Strips/Developer/Redirect Manager/{C8DCB31E-B91D-4EE8-A5F3-E14EF3942452}/invariant/0</x-item>
-        <x-item>/master/sitecore/system/Modules/Redirect Manager/Settings/{98EBA38F-186D-4308-8407-D74C771DBA33}/invariant/0</x-item>
-        <x-item>/master/sitecore/system/Modules/Redirect Manager/Settings/Sites/{87DEF5C4-DF75-42F7-88B7-EE29A467CFB5}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Multisite/{83ABB3C0-40C5-4A33-8A33-BE9E81B6EB62}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Multisite/Data/{90792E29-D867-461D-AF6D-5A02D932B704}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Multisite/Data/Multisite Prefix/{E60A0FB2-5125-4D2B-A8B2-2B8A5CED4A94}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Settings/Settings/Multisites/{511C6368-8791-4FA8-A6D3-92931B2382D0}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Multisite/__Standard Values/{C648EAF4-575A-4EF9-9FB3-30F2F2030E76}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Multisite/{A77B0208-6FD5-4FF5-BEED-A922EDB35A90}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/{40A7B88A-4C93-44A0-B29B-4080808CBD8C}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Item to Item/{BCFFD681-EC1A-4EDB-A0CE-EB005F900A77}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Item to Item/Data/{1A8A813F-A2F8-466C-9C42-EC1CA44D3E87}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Item to Item/Data/Base Item/{19293C70-F330-454E-8BD8-3CC8C7D35C34}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Item to Item/Data/Target Item/{F8D4BF0C-26ED-49EF-AACE-30B4795BF528}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Multisite/{83ABB3C0-40C5-4A33-8A33-BE9E81B6EB62}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Multisite/Data/{90792E29-D867-461D-AF6D-5A02D932B704}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Multisite/Data/Multisite Prefix/{E60A0FB2-5125-4D2B-A8B2-2B8A5CED4A94}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_RegEx Redirect/{10B4487B-B89A-4F4D-8E8D-2F37E95E4830}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_RegEx Redirect/Data/{BFAB35CD-9E99-49E3-9424-F2FE9E1A9C0A}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_RegEx Redirect/Data/Expression/{FEB12E97-F138-46E9-B74F-C676A286AF2C}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_RegEx Redirect/Data/Value/{C526077B-1253-4E82-8F7F-4752CEC3A6E1}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Item/{8BFC5D64-D15C-45C4-B5A0-A42FFC525F26}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Item/Data/{959B0092-424E-44E4-A5A3-2CB34217974E}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Item/Data/Base Section/{85196B35-3F71-43AE-8498-7865C4D3B64B}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Item/Data/Target Item/{A48DFBAC-90D3-41C5-A691-CF779EAC4744}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Section/{9FDF5133-01CA-4807-98D7-B428CB847947}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Section/Data/{4679DA46-BA7F-4DA7-9C0E-B4C046264DFF}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Section/Data/Base Section/{690EE95D-743F-491E-8B61-6974B5B3C8C2}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Section/Data/Target Section/{C8AA69E0-75BE-4440-83F1-79C961C80AC6}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Settings/{0E69AF35-6BF1-412C-8ECF-D9EA60BC3086}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Settings/Settings/{41EE1039-BD94-4934-A330-09AD98F269DB}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Settings/Settings/Last Use/{64E091E5-91B4-485E-9F60-48607199197C}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Settings/Settings/Multisites/{511C6368-8791-4FA8-A6D3-92931B2382D0}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Settings/Settings/Redirect Code/{ACC539CE-79C8-45FD-AB52-5BDF3257C571}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Settings/Settings/Use on default site/{7B7A2555-8AF5-4DCD-AE4C-AE3929AD38E6}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Data/{1558CE91-0FF7-4A7B-BF07-5E020A77BD22}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Folder/__Standard Values/{F39E43B6-67E0-4234-A410-3D3F5391E4E0}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Folder/{75A8F163-186F-459E-8AFF-3D161A94A9C7}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Item to Item/__Standard Values/{E78D87EE-ABA6-4C29-897F-701794D56B8F}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Item to Item/{D0BFFA7B-CA51-400D-9037-809DECFB14D3}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Multisite/__Standard Values/{C648EAF4-575A-4EF9-9FB3-30F2F2030E76}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Multisite/{A77B0208-6FD5-4FF5-BEED-A922EDB35A90}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/RegEx Redirect/__Standard Values/{2D886EFA-0936-49D9-BC56-8AFF96658EF4}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/RegEx Redirect/{F91102D6-C17E-4966-9A1A-F551FDD18D40}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Section to Item/__Standard Values/{6880B208-B510-4FBA-9962-DB627440CC79}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Section to Item/{A7C5E6AB-48FF-4846-9A2C-255F8387F18E}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Section to Section/__Standard Values/{3DB5E821-6B67-482A-B96E-355DFACF05D8}/invariant/0</x-item>
-        <x-item>/master/sitecore/templates/Redirect Manager/Section to Section/{77A922AE-C49E-468D-BA7E-91746A34E7E0}/invariant/0</x-item>
-      </Entries>
-      <SkipVersions>False</SkipVersions>
-      <Converter>
-        <ItemToEntryConverter>
-          <Transforms>
-            <InstallerConfigurationTransform>
-              <Options>
-                <BehaviourOptions>
-                  <ItemMode>Merge</ItemMode>
-                  <ItemMergeMode>Merge</ItemMergeMode>
-                </BehaviourOptions>
-              </Options>
-            </InstallerConfigurationTransform>
-          </Transforms>
-        </ItemToEntryConverter>
-      </Converter>
-      <Include />
-      <Exclude />
-      <Name>Items</Name>
-    </xitems>
     <xfiles>
       <Entries>
         <x-item>/Pages/</x-item>
@@ -272,6 +170,122 @@ use.</Readme>
       <Include />
       <Exclude />
       <Name>dictionary</Name>
+    </xitems>
+    <xitems>
+      <Entries>
+        <x-item>/master/sitecore/templates/Redirect Manager/{40A7B88A-4C93-44A0-B29B-4080808CBD8C}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Item to Item/{BCFFD681-EC1A-4EDB-A0CE-EB005F900A77}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Item to Item/Data/{1A8A813F-A2F8-466C-9C42-EC1CA44D3E87}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Item to Item/Data/Base Item/{19293C70-F330-454E-8BD8-3CC8C7D35C34}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Item to Item/Data/Target Item/{F8D4BF0C-26ED-49EF-AACE-30B4795BF528}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Multisite/{83ABB3C0-40C5-4A33-8A33-BE9E81B6EB62}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Multisite/Data/{90792E29-D867-461D-AF6D-5A02D932B704}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Multisite/Data/Multisite Prefix/{E60A0FB2-5125-4D2B-A8B2-2B8A5CED4A94}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_RegEx Redirect/{10B4487B-B89A-4F4D-8E8D-2F37E95E4830}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_RegEx Redirect/Data/{BFAB35CD-9E99-49E3-9424-F2FE9E1A9C0A}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_RegEx Redirect/Data/Expression/{FEB12E97-F138-46E9-B74F-C676A286AF2C}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_RegEx Redirect/Data/Value/{C526077B-1253-4E82-8F7F-4752CEC3A6E1}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Item/{8BFC5D64-D15C-45C4-B5A0-A42FFC525F26}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Item/Data/{959B0092-424E-44E4-A5A3-2CB34217974E}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Item/Data/Base Section/{85196B35-3F71-43AE-8498-7865C4D3B64B}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Item/Data/Target Item/{A48DFBAC-90D3-41C5-A691-CF779EAC4744}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Section/{9FDF5133-01CA-4807-98D7-B428CB847947}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Section/Data/{4679DA46-BA7F-4DA7-9C0E-B4C046264DFF}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Section/Data/Base Section/{690EE95D-743F-491E-8B61-6974B5B3C8C2}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Section to Section/Data/Target Section/{C8AA69E0-75BE-4440-83F1-79C961C80AC6}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Settings/{0E69AF35-6BF1-412C-8ECF-D9EA60BC3086}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Settings/Settings/{41EE1039-BD94-4934-A330-09AD98F269DB}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Settings/Settings/Last Use/{64E091E5-91B4-485E-9F60-48607199197C}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Settings/Settings/Multisites/{511C6368-8791-4FA8-A6D3-92931B2382D0}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Settings/Settings/Redirect Code/{ACC539CE-79C8-45FD-AB52-5BDF3257C571}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/_Settings/Settings/Use on default site/{7B7A2555-8AF5-4DCD-AE4C-AE3929AD38E6}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Data/{1558CE91-0FF7-4A7B-BF07-5E020A77BD22}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Folder/__Standard Values/{F39E43B6-67E0-4234-A410-3D3F5391E4E0}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Folder/{75A8F163-186F-459E-8AFF-3D161A94A9C7}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Item to Item/__Standard Values/{E78D87EE-ABA6-4C29-897F-701794D56B8F}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Item to Item/{D0BFFA7B-CA51-400D-9037-809DECFB14D3}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Multisite/__Standard Values/{C648EAF4-575A-4EF9-9FB3-30F2F2030E76}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Multisite/{A77B0208-6FD5-4FF5-BEED-A922EDB35A90}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Redirect Manager/__Standard Values/{1C6FFBA4-EB82-475F-9DA9-11CC06BF0321}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Redirect Manager/{2F79E9A8-CE0C-4760-AEBF-2100AA56AC67}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/RegEx Redirect/__Standard Values/{2D886EFA-0936-49D9-BC56-8AFF96658EF4}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/RegEx Redirect/{F91102D6-C17E-4966-9A1A-F551FDD18D40}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Section to Item/__Standard Values/{6880B208-B510-4FBA-9962-DB627440CC79}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Section to Item/{A7C5E6AB-48FF-4846-9A2C-255F8387F18E}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Section to Section/__Standard Values/{3DB5E821-6B67-482A-B96E-355DFACF05D8}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Redirect Manager/Section to Section/{77A922AE-C49E-468D-BA7E-91746A34E7E0}/invariant/0</x-item>
+      </Entries>
+      <SkipVersions>False</SkipVersions>
+      <Converter>
+        <ItemToEntryConverter>
+          <Transforms>
+            <InstallerConfigurationTransform>
+              <Options>
+                <BehaviourOptions>
+                  <ItemMode>Merge</ItemMode>
+                  <ItemMergeMode>Merge</ItemMergeMode>
+                </BehaviourOptions>
+              </Options>
+            </InstallerConfigurationTransform>
+          </Transforms>
+        </ItemToEntryConverter>
+      </Converter>
+      <Include />
+      <Exclude />
+      <Name>Templates</Name>
+    </xitems>
+    <xitems>
+      <Entries>
+        <x-item>/master/sitecore/system/Modules/Redirect Manager/{05DAD3A3-7484-411E-9233-D9F052219632}/invariant/0</x-item>
+        <x-item>/master/sitecore/system/Modules/Redirect Manager/Settings/{98EBA38F-186D-4308-8407-D74C771DBA33}/invariant/0</x-item>
+        <x-item>/master/sitecore/system/Modules/Redirect Manager/Settings/Sites/{87DEF5C4-DF75-42F7-88B7-EE29A467CFB5}/invariant/0</x-item>
+      </Entries>
+      <SkipVersions>False</SkipVersions>
+      <Converter>
+        <ItemToEntryConverter>
+          <Transforms>
+            <InstallerConfigurationTransform>
+              <Options>
+                <BehaviourOptions>
+                  <ItemMode>Merge</ItemMode>
+                  <ItemMergeMode>Merge</ItemMergeMode>
+                </BehaviourOptions>
+              </Options>
+            </InstallerConfigurationTransform>
+          </Transforms>
+        </ItemToEntryConverter>
+      </Converter>
+      <Include />
+      <Exclude />
+      <Name>Items Master</Name>
+    </xitems>
+    <xitems>
+      <Entries>
+        <x-item>/core/sitecore/content/Applications/Content Editor/Ribbons/Contextual Ribbons/Redirect Manager/{6362C18B-110F-42A9-B811-C822D69EEF1C}/invariant/0</x-item>
+        <x-item>/core/sitecore/content/Applications/Content Editor/Ribbons/Contextual Ribbons/Redirect Manager/Redirect Manager/{7801E196-2B55-447C-A6D0-CA78C2AAA881}/invariant/0</x-item>
+        <x-item>/core/sitecore/content/Applications/Content Editor/Ribbons/Contextual Ribbons/Redirect Manager/Redirect Manager/Redirect Manager/{8FC78890-36C9-4BC1-82CB-74CCE2B09EC5}/invariant/0</x-item>
+        <x-item>/core/sitecore/content/Applications/Content Editor/Ribbons/Contextual Ribbons/Redirect Manager/Redirect Manager/Redirect Manager/Refresh Redirects/{4D3142A9-C4E2-422E-A7FA-001B02A4E943}/invariant/0</x-item>
+        <x-item>/core/sitecore/content/Applications/Content Editor/Ribbons/Contextual Ribbons/Redirect Manager/Redirect Manager/Redirect Manager/Remove Old Redirects/{4CA73D20-8710-4933-8395-38A683D58360}/invariant/0</x-item>
+        <x-item>/core/sitecore/content/Applications/Content Editor/Ribbons/Contextual Ribbons/Redirect Manager/Redirect Manager/Redirect Manager/Sync Last Use/{7C5B9951-FCD9-434B-A5DC-7DFC83C5D353}/invariant/0</x-item>
+      </Entries>
+      <SkipVersions>False</SkipVersions>
+      <Converter>
+        <ItemToEntryConverter>
+          <Transforms>
+            <InstallerConfigurationTransform>
+              <Options>
+                <BehaviourOptions>
+                  <ItemMode>Merge</ItemMode>
+                  <ItemMergeMode>Merge</ItemMergeMode>
+                </BehaviourOptions>
+              </Options>
+            </InstallerConfigurationTransform>
+          </Transforms>
+        </ItemToEntryConverter>
+      </Converter>
+      <Include />
+      <Exclude />
+      <Name>Items Core</Name>
     </xitems>
   </Sources>
   <Converter>

@@ -10,7 +10,7 @@
 <body>
     <form id="form1" runat="server">
     <div class="buttons-right">
-        <asp:Button CssClass="button" runat="server" ID="ShowOld" OnClick="ShowOldRedirects_Click" Text="Show oll redirects"/>
+        <asp:Button CssClass="button" runat="server" ID="ShowOld" OnClick="ShowOldRedirects_Click" Text="Show old redirects"/>
         <asp:Button CssClass="button" runat="server" ID="ShowAll" OnClick="ShowAllRedirects_Click" Text="Show all redirects"/>
     </div>
     <div class="main">

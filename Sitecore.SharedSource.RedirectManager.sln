@@ -1,20 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.SharedSource.RedirectManager", "Sitecore.SharedSource.RedirectManager.csproj", "{3C77D8DA-B0D8-45EC-B920-2F9A0A975A53}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.SharedSource.RedirectManager", "Sitecore.SharedSource.RedirectManager.csproj", "{C6FBEAB5-9990-44C5-9F19-A8174D792558}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		TDS|Any CPU = TDS|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3C77D8DA-B0D8-45EC-B920-2F9A0A975A53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3C77D8DA-B0D8-45EC-B920-2F9A0A975A53}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3C77D8DA-B0D8-45EC-B920-2F9A0A975A53}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3C77D8DA-B0D8-45EC-B920-2F9A0A975A53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6FBEAB5-9990-44C5-9F19-A8174D792558}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6FBEAB5-9990-44C5-9F19-A8174D792558}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6FBEAB5-9990-44C5-9F19-A8174D792558}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6FBEAB5-9990-44C5-9F19-A8174D792558}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6FBEAB5-9990-44C5-9F19-A8174D792558}.TDS|Any CPU.ActiveCfg = TDS|Any CPU
+		{C6FBEAB5-9990-44C5-9F19-A8174D792558}.TDS|Any CPU.Build.0 = TDS|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
